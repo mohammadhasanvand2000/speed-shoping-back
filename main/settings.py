@@ -42,13 +42,13 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'colorfield',
-
+    'rest_framework_simplejwt.token_blacklist',
     'accounts',
     'product',
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  
+    "http://localhost:3000/",  
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -176,3 +176,10 @@ ADMINS = [('Ashman', 'ashman.market@gmail.com')]
 # Debug email settings
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+
+
+
+import django_heroku
+django_heroku.settings(locals())

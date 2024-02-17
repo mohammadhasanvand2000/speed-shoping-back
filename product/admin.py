@@ -8,4 +8,5 @@ admin.site.register(Product_color)
 admin.site.register(Client_Coments)
 admin.site.register(Cart)
 admin.site.register(CartItem)
+admin.site.register(ShippingInfo)
 # Register your models here.

@@ -30,6 +30,7 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
 
 class ProductColorSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = Product_color
         fields = '__all__'
@@ -67,21 +68,37 @@ class CombinedSerializer(serializers.Serializer):
         representation = super().to_representation(instance)
         return representation
 
-    
+class CartSerializer(serializers.ModelSerializer):
+    cart_items = serializers.SerializerMethodField()
+
+    def get_cart_items(self, cart):
+        cart_items = CartItem.objects.filter(cart=cart)
+        return CartItemSerializer(cart_items, many=True).data
+
+    class Meta:
+        model = Cart
+        fields = ['user', 'items', 'cart_items']
 
 class CartItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = CartItem
-        fields = "__all__"
+        fields = ['product', 'quantity','color']
 
-def create_cart_item(data):
-    serializer = CartItemSerializer(data=data)
-    serializer.is_valid(raise_exception=True)
-    return serializer.save()
 
-class CartSerializer(serializers.ModelSerializer):
-    cart_items = CartItemSerializer()  # source را حذف کنید
-    
+
+
+from rest_framework import serializers
+from .models import Favorite
+
+class FavoriteSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Cart
-        fields = "__all__"
+        model = Favorite
+        fields = ['id', 'user', 'product']
+
+
+
+
+class ShippingInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ShippingInfo
+        fields = '__all__'

@@ -32,6 +32,7 @@ from django.utils.translation import gettext as _
 from .Util import Util
 from django.shortcuts import redirect
 
+from rest_framework.permissions import IsAuthenticated
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -40,12 +41,20 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = [AllowAny]
     serializer_class = RegisterSerializer
 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.tokens import RefreshToken, OutstandingToken
+from rest_framework_simplejwt.tokens import RefreshToken
 
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
 
-
-
-
-
+    def post(self, request):
+        token = RefreshToken(request.data.get('refresh'))
+        token.blacklist()
+        return Response("Success")
 
 class RequestPasswordResetEmail(GenericAPIView):
     serializer_class = ResetPasswordEmailRequestSerializer

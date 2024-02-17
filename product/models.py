@@ -84,18 +84,29 @@ class Cart(models.Model):
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE,related_name="cart_items")
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="product_cart_items")
+    color = models.CharField(max_length=10, blank=True, null=True)
     quantity = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return f'{self.quantity} of {self.product.title} in Cart for User: {self.cart.user.name}'
 
 
+class Favorite(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='favorites')
+
+    def __str__(self):
+        return f'{self.user.name}\'s Favorite: {self.product.title}'
 
     
 
+class ShippingInfo(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='shipping_infos',null=True,blank=True)
+    name= models.CharField(max_length=50)
+    postalCode = models.CharField(max_length=10)
+    phone = models.CharField(max_length=15)
+    address= models.TextField()
+    create = models.DateTimeField(auto_now_add=True)
 
-
-
-
-
-    
+    def __str__(self):
+        return f"{self.cart.user.name} - {self.postalCode} - {self.phone} - {self.name} - {self.create}"
